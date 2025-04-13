@@ -8,15 +8,6 @@ app.use(json());
 
 app.use("/auth", authRoutes);
 
-
-// app.get('/', (req:Request, res:Response)=>{
-//     console.log("test");
-//     res.send("yes it works")
-// })
-
-
-
-
 const PORT = process.env.PORT || 6000;
 app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
