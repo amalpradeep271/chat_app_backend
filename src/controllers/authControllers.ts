@@ -15,7 +15,7 @@ export const register = async (req: Request, res: Response) => {
       [username, email, hashedPassword]
     );
     const user = result.rows[0];
-    res.status(201).json({ message: "User created Successfully", user });
+    res.status(201).json({ user });
   } catch (error) {
     res.status(500).json({ error: "Failed to register user" });
   }
@@ -35,7 +35,8 @@ export const login = async (req: Request, res: Response): Promise<any> => {
       return res.status(400).json({ error: "Invalid creadentials" });
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "10h" });
-    res.json({ message: "Logged in successfully", token });
+    let finalResult = { ...user, token };
+    res.json({ user: finalResult });
   } catch (error) {
     res.status(500).json({ error: "Failed to Log in" });
   }
