@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { error } from "console";
 import { Request, Response, NextFunction } from "express";
 
 export const verifyToken = (
@@ -13,10 +12,10 @@ export const verifyToken = (
     res.status(403).json({ error: "No token provided" });
     return;
   }
-  
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_TOKEN || "worisecretkey");
-    req.user =decoded as {id: string};
+    req.user = decoded as { id: string };
     next();
   } catch (error) {
     res.status(401).json({ error: "Invalid token" });
