@@ -28,14 +28,14 @@ io.on("connection", (socket) => {
     console.log("User joined conversation :" + conversationId);
   });
 
-  socket.on("SendMessage", async (message) => {
+  socket.on("sendMessage", async (message) => {
     const { conversationId, senderId, content } = message;
 
     try {
       const savedMessage = await saveMessage(conversationId, senderId, content);
       console.log("sendMessage : ");
       console.log(savedMessage);
-      io.to(conversationId).emit("newMessage", saveMessage);
+      io.to(conversationId).emit("newMessage", savedMessage);
     } catch (err) {
       console.error("Failed to save message", error);
     }
@@ -47,6 +47,6 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 6000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
