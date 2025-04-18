@@ -1,6 +1,7 @@
 import { json } from "body-parser";
 import authRoutes from "./routes/authRoutes";
 import conversationsRoutes from "./routes/conversationsRoutes";
+import contactRoutes from "./routes/contactRoutes";
 import messagesRoutes from "./routes/messagesRoutes";
 import http from "http";
 import { Server } from "socket.io";
@@ -19,6 +20,8 @@ const io = new Server(server, {
 
 app.use("/auth", authRoutes);
 app.use("/conversations", conversationsRoutes);
+app.use("/messages", messagesRoutes);
+app.use("/contacts", contactRoutes);
 app.use("/messages", messagesRoutes);
 
 io.on("connection", (socket) => {
