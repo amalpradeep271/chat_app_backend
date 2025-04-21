@@ -29,27 +29,29 @@ export const fetchContacts = async (
   }
 };
 
-export const addContact = async (req: Request, res: Response): Promise<any>  => {
+export const addContact = async (req: Request, res: Response): Promise<any> => {
   let userId = null;
   if (req.user) {
     userId = req.user.id;
   }
-  const { contactId } = req.body;
+  const { contactEmail } = req.body;
   try {
     const contactExists = await pool.query(
-      `SELECT id from users where id = $1`,
-      [contactId]
+      `SELECT id from users where email = $1`,
+      [contactEmail]
     );
 
     if (contactExists.rowCount === 0) {
       return res.status(404).json({ error: "Contact not found" });
     }
 
+    const contactId = contactExists.rows[0].id;
+
     await pool.query(
       `
       INSERT INTO contacts (user_id, contact_id)
       VALUES ($1,$2)
-      ON CONFLICT DO NOTHING
+      ON CONFLICT DO NOTHING;
       `,
       [userId, contactId]
     );

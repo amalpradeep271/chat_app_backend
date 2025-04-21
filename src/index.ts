@@ -22,7 +22,7 @@ app.use("/auth", authRoutes);
 app.use("/conversations", conversationsRoutes);
 app.use("/messages", messagesRoutes);
 app.use("/contacts", contactRoutes);
-app.use("/messages", messagesRoutes);
+// app.use("/messages", messagesRoutes);
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
