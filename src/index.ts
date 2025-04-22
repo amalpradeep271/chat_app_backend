@@ -8,6 +8,7 @@ import { Server } from "socket.io";
 import express, { Request, Response } from "express";
 import { saveMessage } from "./controllers/messageControllers";
 import { error } from "console";
+import "./cron/cronJob";
 
 const app = express();
 const server = http.createServer(app);

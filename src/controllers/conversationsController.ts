@@ -1,3 +1,4 @@
+import { AI_BOT_ID } from "../config";
 import pool from "../models/db";
 import { Request, Response } from "express";
 
@@ -91,11 +92,11 @@ export const getDailyQuestion = async (
     const result = await pool.query(
       `
       SELECT content FROM messages
-      WHERE conversation_id =$1 AND sender_id = 'AI-BOT'
+      WHERE conversation_id =$1 AND sender_id = $2
       ORDER BY created_at DESC
       LIMIT 1
       `,
-      [conversationId]
+      [conversationId,AI_BOT_ID]
     );
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "No daily question found" });
