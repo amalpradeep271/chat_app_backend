@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { AI_BOT_ID } from "../config";
 import pool from "../models/db";
 import { Request, Response } from "express";
@@ -19,6 +20,10 @@ export const fetchAllConversationsByUserId = async (
                 WHEN u1.id = $1 THEN u2.username
                 ELSE u1.username
             END AS participant_name,
+            CASE
+                WHEN u1.id = $1 THEN u2.profile_image
+                ELSE u1.profile_image
+            END AS participant_image,     
             m.content AS last_message, 
             m.created_at AS last_message_time 
         FROM conversations c
@@ -88,19 +93,26 @@ export const getDailyQuestion = async (
   res: Response
 ): Promise<any> => {
   const conversationId = req.params.id;
+  const today = dayjs().format("YYYY-MM-DD");
+
   try {
     const result = await pool.query(
       `
       SELECT content FROM messages
-      WHERE conversation_id =$1 AND sender_id = $2
+      WHERE conversation_id = $1 AND sender_id = $2 AND created_at::date = $3
       ORDER BY created_at DESC
       LIMIT 1
       `,
-      [conversationId,AI_BOT_ID]
+      [conversationId, AI_BOT_ID, today]
     );
+
     if (result.rowCount === 0) {
-      return res.status(404).json({ error: "No daily question found" });
+      return res
+        .status(404)
+        .json({ error: "No daily question found for today" });
     }
+    console.log("✅ Daily Question:", result.rows[0].content);
+
     res.json({ question: result.rows[0].content });
   } catch (error) {
     console.error("Error fetching daily question:", error);

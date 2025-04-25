@@ -5,14 +5,22 @@ import jwt from "jsonwebtoken";
 
 const SALT_ROUNDS = 10;
 const JWT_SECRET = process.env.JWT_SECRET || "worisecretkey";
+const randomImages = [
+  'https://avatar.iran.liara.run/public/34',
+  'https://avatar.iran.liara.run/public/12',
+  'https://avatar.iran.liara.run/public/43',
+  'https://avatar.iran.liara.run/public/13',
+  'https://avatar.iran.liara.run/public/39',
+];
 
 export const register = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    const randomImage=randomImages[Math.floor(Math.random()*randomImages.length)];
     const result = await pool.query(
-      "INSERT INTO users (username,email,password) VALUES ($1, $2 ,$3) RETURNING *",
-      [username, email, hashedPassword]
+      "INSERT INTO users (username,email,password, profile_image) VALUES ($1, $2 ,$3, $4) RETURNING *",
+      [username, email, hashedPassword,randomImage]
     );
     const user = result.rows[0];
     res.status(201).json({ user });

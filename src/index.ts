@@ -8,7 +8,7 @@ import { Server } from "socket.io";
 import express, { Request, Response } from "express";
 import { saveMessage } from "./controllers/messageControllers";
 import { error } from "console";
-import "./cron/cronJob";
+// import "./cron/cronJob";
 
 const app = express();
 const server = http.createServer(app);
@@ -23,7 +23,6 @@ app.use("/auth", authRoutes);
 app.use("/conversations", conversationsRoutes);
 app.use("/messages", messagesRoutes);
 app.use("/contacts", contactRoutes);
-// app.use("/messages", messagesRoutes);
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
